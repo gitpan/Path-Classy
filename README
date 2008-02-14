@@ -1,0 +1,187 @@
+NAME
+    Path::Classy - Augmented Path::Class (fancy stuff)
+
+SYNOPSIS
+        use Path::Classy qw( file );
+
+        my $f = file( 'my/file' );
+
+        my $size = $f->size(); # size in bytes
+        my $h_size = $f->size({ format => 'h'}); # eg. '12K'
+
+        my $mtime = $f->mtime; # secs since epoch
+        my $mtime_days = $f->mtime({ as => 'days' }); # days since epoch
+        my $mtime_dt = $f->mtime({ as => 'dt' }); # as a DateTime
+
+        my $uri = $f->uri; # URI->new( 'file://...' );
+
+DESCRIPTION
+        This module is pretty much an experience by now.
+        It is quite superfluous.
+
+    This module augments the API of Path::Class objects with a few more
+    methods. The idea is: since you turned your paths into objects, why not
+    take it as far as possible?
+
+    For example, after creating a Path::Class object:
+
+        use Path::Class qw( file );
+
+        my $f = file( 'foo.txt' );
+
+    there are some info you can get from the file attached to the current
+    path:
+
+        my $st = $f->stat;
+
+    But if you want to know if it exists already or its size (preferably in
+    a nice format like '1G')? With Path::Class, you have to say
+
+        print "exists already\n" if -e $f;
+        printf "size: %s\n", -s $f;
+                           # $f->stat->size works too
+
+    The filetest operators are quite nice and short. But if you want more
+    consistency, you would expect methods to access this info:
+
+        print "exists already\n" if $f->exists;
+        printf "size: %s\n", $f->size;
+
+    `Path::Classy' provides some of these missing methods. It is far
+    complete, as it is a very recent code. But it may occasionally be
+    useful.
+
+    ATTENTION: `Path::Classy' does not export anything by default, while
+    `Path::Class' exports 'file' and 'dir'.
+
+METHODS
+    So far, only files were contemplated with extra methods. These are
+    described below.
+
+    In the description below, `$f' is typically created with statements like
+
+      use Path::Classy qw( file );
+      $f = file( 'Path-Classy-0.001_0.tar.gz' );
+
+    size [ equiv: -s ]
+          $size = $f->size(); 
+          $size = $f->size(\%options);
+
+        Returns the file size. By the default, it returns the raw byte
+        count. A 'format' option is accepted which support the following
+        choices:
+
+        h   Returns the size in a human readable format (like '12K', '1G').
+            This is done by using Number::Bytes::Human.
+
+        ''  Returns the raw byte size.
+
+        Equivalence to a filetest expression:
+
+          $f->size      ~~     -s $f
+
+        Examples:
+
+          # assume $f is a file with 24475 bytes
+          $f->size() # 24475
+          $f->size({ format => 'h' }) # '24K'
+          $f->size({ format => '' }) # 24475
+
+    exists [ equiv: -e ]
+          $yn = $f->exists;
+
+        Tells if the file exists or not.
+
+        Equivalence to a filetest expression:
+
+          $f->exists    ~~     -e $f
+
+    mtime [ equiv: -M ]
+          $mtime = $f->mtime;
+          $mtime = $f->mtime(\%options);
+
+        Returns the modification time of the file. By default, it returns
+        the number of seconds from epoch (as `$f->stat->mtime' does). It
+        supports options 'from' and 'as'. The option 'from' specifies the
+        time from a certain reference and the possible choices are:
+
+        'epoch'
+            The time is specified since the epoch. (The epoch was at 00:00
+            January 1, 1970 GMT.)
+
+        'start'
+            The time is specified since the start time of the script (as
+            given by `$^T').
+
+        The default is 'epoch'.
+
+        The option 'as' determines how the time is returned. The supported
+        choices are:
+
+        'sec'
+            The time in seconds since the reference specified by 'from'.
+
+        'days'
+            The time in days since the reference specifed by 'from'.
+
+        'dt'
+            The time as a DateTime object. It should be independent of the
+            reference given by 'from'.
+
+        The default is 'sec'.
+
+        With this method, the equivalence to a filetest expression is not
+        that nice:
+
+          $f->mtime({ from => 'start', as => 'days' })
+
+        is
+
+          -( -M $f )
+
+        because `M $f' is the script start time minus file modification time
+        in days. In turn,
+
+          $f->mtime()  ~~ $f->stat->mtime
+
+        Examples:
+
+          $f->mtime(); # file mod time since epoch (in secs)
+          $f->mtime({ as => 'days' }); # idem (in days)
+          $f->mtime({ as => 'dt' }); # file mod time as a DateTime
+
+          $f->mtime({ from => 'epoch', as => 'days' }); # same as $f->mtime
+
+          $f->mtime({ from => 'start' }); # file mod time since script start time (in secs)
+          $f->mtime({ from => 'start', as => 'days' }); # same as -( -M $f )
+          $f->mtime({ from => 'start', as => 'dt' }); # as a DateTime
+
+        When using `as => 'dt'', it should not make any difference which
+        reference time ('epoch' or 'start') is chosen (minus computation
+        errors). Prefer `from => 'epoch'' (which can be omitted) because
+        there are less involved computations.
+
+    atime [ equiv: -A ]
+          $atime = $f->atime;
+          $atime = $f->atime(\%options);
+
+        Returns the access time of the file. Everything that was said about
+        `mtime' applies here. By default, it returns the number of seconds
+        from epoch (as `$f->stat->atime' does). And it supports the options
+        'from' and 'as' with the same choices as 'mtime' does.
+
+    ctime [ equiv: -C ]
+          $ctime = $f->ctime;
+          $ctime = $f->ctime(\%options);
+
+        Returns the creation (or inode change) time of the file (for
+        filesystems which support it). Everything that was said about
+        `mtime' applies here. By default, it returns the number of seconds
+        from epoch (as `$f->stat->ctime' does). And it supports the options
+        'from' and 'as' with the same choices as 'mtime' does.
+
+    uri
+          $uri = $f->uri;
+
+        Returns a 'file:/' URI pointing to the actual file.
+

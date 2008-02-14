@@ -1,0 +1,24 @@
+--- #YAML:1.0
+name:                Path-Classy
+version:             0.001_0
+abstract:            Augmented Path::Class (fancy stuff)
+license:             perl
+author:              
+    - Adriano R. Ferreira <ferreira@cpan.org>
+generated_by:        ExtUtils::MakeMaker version 6.42
+distribution_type:   module
+requires:     
+    Attribute::Memoize:            0
+    DateTime:                      0
+    Exporter:                      0
+    Number::Bytes::Human:          0
+    Path::Class:                   0
+    Path::Class::Dir:              0
+    Path::Class::File:             0
+    strict:                        0
+    Test::More:                    0
+    URI::file:                     0
+    warnings:                      0
+meta-spec:
+    url:     http://module-build.sourceforge.net/META-spec-v1.3.html
+    version: 1.3

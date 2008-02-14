@@ -1,0 +1,12 @@
+
+lib/Path/Classy.pm
+#lib/Path/Classy/Dir.pm
+lib/Path/Classy/File.pm
+
+Makefile.PL
+MANIFEST			This list of files
+README
+Changes
+
+t/01use.t
+META.yml                                 Module meta-data (added by MakeMaker)

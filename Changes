@@ -1,0 +1,6 @@
+Revision history for Perl distribution Path-Classy.
+
+0.001_0 Feb 14, 2008
+        - first CPAN release
+        - file methods: size, exists, mtime, atime, 
+          ctime, uri
