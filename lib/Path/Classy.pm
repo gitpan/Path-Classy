@@ -5,7 +5,7 @@ use 5.006;
 use strict;
 use warnings;
 
-our $VERSION = '0.001_0';
+our $VERSION = '0.002_0';
 
 our @ISA;
 our @EXPORT_OK;
@@ -19,14 +19,12 @@ BEGIN {
 }
 
 use Path::Classy::File ();
-#use Path::Classy::Dir ();
+use Path::Classy::Dir ();
 
 sub file { Path::Classy::File->new(@_) }
-#sub dir  { Path::Classy::Dir ->new(@_) }
-sub dir  { Path::Class::Dir ->new(@_) }
+sub dir  { Path::Classy::Dir ->new(@_) }
 sub foreign_file { Path::Classy::File->new_foreign(@_) }
-#sub foreign_dir  { Path::Classy::Dir ->new_foreign(@_) }
-sub foreign_dir  { Path::Class::Dir ->new_foreign(@_) }
+sub foreign_dir  { Path::Classy::Dir ->new_foreign(@_) }
 
 1;
 

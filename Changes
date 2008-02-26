@@ -1,5 +1,10 @@
 Revision history for Perl distribution Path-Classy.
 
+0.002_0 Feb 26, 2008
+        - now methods size, exists, mtime, atime, ctime
+          work for dirs too
+        - TODO: update documentation
+
 0.001_0 Feb 14, 2008
         - first CPAN release
         - file methods: size, exists, mtime, atime, 

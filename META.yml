@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name:                Path-Classy
-version:             0.001_0
+version:             0.002_0
 abstract:            Augmented Path::Class (fancy stuff)
 license:             perl
 author:              

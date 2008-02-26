@@ -1,7 +1,8 @@
 
 lib/Path/Classy.pm
-#lib/Path/Classy/Dir.pm
+lib/Path/Classy/Dir.pm
 lib/Path/Classy/File.pm
+lib/Path/Classy/Entity.pm
 
 Makefile.PL
 MANIFEST			This list of files
